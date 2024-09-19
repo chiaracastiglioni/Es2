@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -81,12 +82,12 @@ fun LoginScreen(
                     .fillMaxHeight(0.2f)
 
             )
-
+            Spacer(modifier = Modifier.size(30.dp))
             LoginForm(
                 state = state,
                 actions = actions,
                 onSubmit = onSubmit,
-                spacerHeight = 60
+                spacerHeight = 50
             )
 
         }
@@ -118,16 +119,17 @@ fun LoginScreen(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 16.dp)
+                    .fillMaxHeight()
             ) {
 
-                Spacer(modifier = Modifier.size(60.dp))
+                Spacer(modifier = Modifier.size(20.dp))
 
 
                 LoginForm(
                     state = state,
                     actions = actions,
                     onSubmit = onSubmit,
-                    spacerHeight = 25
+                    spacerHeight = 25,
                 )
 
 
@@ -152,96 +154,106 @@ fun LoginForm(
     state: LoginState,
     actions: LoginActions,
     onSubmit: () -> Unit,
-    spacerHeight: Int
+    spacerHeight: Int,
 ) {
     val (usernameFocusRequester, passwordFocusRequester) = FocusRequester.createRefs()
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
     var passwordVisible by remember { mutableStateOf(false) }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
         modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
+            .fillMaxWidth()
+            .fillMaxHeight(0.9f)
+            .padding(horizontal = 20.dp)
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
+            .shadow(6.dp, RoundedCornerShape(20.dp))
+            .padding(6.dp)
     ) {
-        Spacer(modifier = Modifier.size(spacerHeight.dp))
-
-        state.errorMessage?.let {
-            Text(text = it, color = Color.Red)
-            Spacer(modifier = Modifier.size(10.dp))
-        }
-
-        OutlinedTextField(
-            value = state.username,
-            onValueChange = actions::setUsername,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next,
-                capitalization = KeyboardCapitalization.Sentences
-            ),
-            label = { Text("Username") },
-            shape = RoundedCornerShape(20.dp),
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .focusRequester(usernameFocusRequester),
-            enabled = !state.isLoading,
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    passwordFocusRequester.requestFocus()
-                }
-            )
-        )
-
-        Spacer(modifier = Modifier.size(spacerHeight.dp))
-
-        OutlinedTextField(
-            value = state.password,
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            onValueChange = actions::setPassword,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
-            ),
-            label = { Text("Password") },
-            trailingIcon = {
-                IconButton(onClick = {
-                    passwordVisible = !passwordVisible
-                }) {
-                    Icon(
-                        imageVector = if (passwordVisible) Icons.Filled.VisibilityOff
-                        else Icons.Filled.Visibility,
-                        contentDescription = if (passwordVisible) "Nascondi password"
-                        else "Mostra password"
-                    )
-                }
-
-            },
-            shape = RoundedCornerShape(20.dp),
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .focusRequester(passwordFocusRequester),
-            enabled = !state.isLoading,
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
-                }
-            )
-        )
-
-        Spacer(modifier = Modifier.size(spacerHeight.dp))
-
-        Button(
-            onClick = {
-                keyboardController?.hide()
-                if (!state.canSubmit) return@Button
-
-                onSubmit()
-            },
-            modifier = Modifier.width(150.dp),
-            border = BorderStroke(1.dp, Color.Gray),
-            enabled = !state.isLoading
+                .fillMaxSize()
+                .verticalScroll(scrollState)
         ) {
-            Text("Accedi")
+            Spacer(modifier = Modifier.size(spacerHeight.dp))
+
+            state.errorMessage?.let {
+                Text(text = it, color = Color.Red)
+            }
+            Spacer(modifier = Modifier.size(spacerHeight.dp))
+
+            OutlinedTextField(
+                value = state.username,
+                onValueChange = actions::setUsername,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next,
+                    capitalization = KeyboardCapitalization.Sentences
+                ),
+                label = { Text("Username") },
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier
+                    .fillMaxWidth(0.85f)
+                    .focusRequester(usernameFocusRequester),
+                enabled = !state.isLoading,
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        passwordFocusRequester.requestFocus()
+                    }
+                )
+            )
+
+            Spacer(modifier = Modifier.size(spacerHeight.dp))
+
+            OutlinedTextField(
+                value = state.password,
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                onValueChange = actions::setPassword,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                label = { Text("Password") },
+                trailingIcon = {
+                    IconButton(onClick = {
+                        passwordVisible = !passwordVisible
+                    }) {
+                        Icon(
+                            imageVector = if (passwordVisible) Icons.Filled.VisibilityOff
+                            else Icons.Filled.Visibility,
+                            contentDescription = if (passwordVisible) "Nascondi password"
+                            else "Mostra password"
+                        )
+                    }
+
+                },
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier
+                    .fillMaxWidth(0.85f)
+                    .focusRequester(passwordFocusRequester),
+                enabled = !state.isLoading,
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                    }
+                )
+            )
+
+            Spacer(modifier = Modifier.size(spacerHeight.dp))
+
+            Button(
+                onClick = {
+                    keyboardController?.hide()
+                    if (!state.canSubmit) return@Button
+
+                    onSubmit()
+                },
+                modifier = Modifier.width(150.dp),
+                border = BorderStroke(1.dp, Color.Gray),
+                enabled = !state.isLoading
+            ) {
+                Text("Accedi")
+            }
         }
     }
 }
