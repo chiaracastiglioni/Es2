@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "578341154268",
+    "project_id": "es2cosmobile",
+    "storage_bucket": "es2cosmobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:578341154268:android:e060920b3a618931bb3319",
+        "android_client_info": {
+          "package_name": "com.example.es2cosmobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgF3UIq1U3kywmM80pTo4tW5o1LGUYD2Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
