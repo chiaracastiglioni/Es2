@@ -1,5 +1,6 @@
 package com.example.es2cosmobile.ui.screens.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.es2cosmobile.data.repositories.UserRepository
@@ -53,6 +54,7 @@ class LoginViewModel(
                 )
             }
             val success = userRepository.checkLogin(_state.value.username, _state.value.password)
+            Log.d("Prova", success.toString())
             if (success) {
                 _state.update {
                     it.copy(isLoading = false)

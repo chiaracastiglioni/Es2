@@ -19,7 +19,7 @@ class UserRepository {
 
     suspend fun addUser(user: User): Boolean {
         return try {
-            db.collection("utenti")
+            db.collection("user")
                 .document(user.username)
                 .set(user, SetOptions.merge())
                 .await()
@@ -63,7 +63,7 @@ class UserRepository {
             imageRef.putFile(imageUri).await()
 
             val uri = imageRef.downloadUrl.await()
-            db.collection("utenti")
+            db.collection("user")
                 .document(userId)
                 .update("urlFoto", uri.toString())
                 .await()
