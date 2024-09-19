@@ -15,19 +15,6 @@ import kotlinx.coroutines.withContext
 class UserRepository {
 
     private val db: FirebaseFirestore = Firebase.firestore
-    private val storage: FirebaseStorage = Firebase.storage
-
-    suspend fun addUser(user: User): Boolean {
-        return try {
-            db.collection("user")
-                .document(user.username)
-                .set(user, SetOptions.merge())
-                .await()
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
 
     suspend fun checkLogin(username: String, password: String): Boolean {
         return withContext(Dispatchers.IO) {
@@ -44,34 +31,6 @@ class UserRepository {
         }
     }
 
-    suspend fun checkUsername(username: String): Boolean {
-        return withContext(Dispatchers.IO) {
-            val documentSnapShot = db.collection("user")
-                .document(username)
-                .get()
-                .await()
-            !documentSnapShot.exists()
-        }
-    }
 
-
-    suspend fun saveProfileImage(userId: String, imageUri: Uri): Boolean {
-        return try {
-            val storageRef = storage.reference
-            val imageRef = storageRef.child("$userId/profile.jpg")
-
-            imageRef.putFile(imageUri).await()
-
-            val uri = imageRef.downloadUrl.await()
-            db.collection("user")
-                .document(userId)
-                .update("urlFoto", uri.toString())
-                .await()
-            true
-
-        } catch (e: Exception) {
-            false
-        }
-    }
 
 }
